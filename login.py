@@ -30,7 +30,6 @@ class Login(object):
         mess.exec_()
 
     def setupUi(self, Form):
-        self.koneksi()
         Form.setObjectName("Form")
         Form.resize(746, 561)
         self.label = QtWidgets.QLabel(Form)
@@ -93,7 +92,11 @@ class Login(object):
                 self.messagebox("Login", "Username atau password salah")
 
             else:
-                self.messagebox("Login", "Berhasil")
+                self.Form = QtWidgets.QDialog()
+                self.ui = Home()
+                self.ui.setupUi(self.Form)
+                self.Form.show()
+                Form.hide()
 
 
         except mc.Error as e:

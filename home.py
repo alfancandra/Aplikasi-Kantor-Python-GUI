@@ -12,9 +12,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Home(object):
-    def __init__(self):
-        super().__init__()
-        self.setupUi()
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(746, 561)
@@ -48,4 +45,11 @@ class Home(object):
         self.label.setText(_translate("Form", "PT. BEJO ABADI Tbk"))
 
 
-
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Form = QtWidgets.QWidget()
+    ui = Home()
+    ui.setupUi(Form)
+    Form.show()
+    sys.exit(app.exec_())
