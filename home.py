@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from pegawai import *
 
 class Home(object):
     def setupUi(self, Form):
@@ -22,6 +22,9 @@ class Home(object):
         self.pushButton_2 = QtWidgets.QPushButton(self.groupBox)
         self.pushButton_2.setGeometry(QtCore.QRect(140, 80, 181, 31))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.clicked.connect(self.pagePegawai)
+        self.pushButton_2.clicked.connect(Form.close)
+
         self.pushButton_3 = QtWidgets.QPushButton(self.groupBox)
         self.pushButton_3.setGeometry(QtCore.QRect(140, 140, 181, 31))
         self.pushButton_3.setObjectName("pushButton_3")
@@ -36,6 +39,12 @@ class Home(object):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def pagePegawai(self):
+        self.Form2 = QtWidgets.QDialog()
+        self.ui = Pegawai()
+        self.ui.setupUi(self.Form2)
+        self.Form2.show()
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
