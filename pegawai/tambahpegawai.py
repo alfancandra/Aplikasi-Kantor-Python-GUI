@@ -66,31 +66,16 @@ class Tambah(object):
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_4)
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.label_8 = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_8.setObjectName("label_8")
-        self.horizontalLayout_5.addWidget(self.label_8)
-        self.label_9 = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_9.setObjectName("label_9")
-        self.horizontalLayout_5.addWidget(self.label_9)
-        self.username = QtWidgets.QLineEdit(self.horizontalLayoutWidget_4)
-        self.username.setObjectName("username")
-        self.horizontalLayout_5.addWidget(self.username)
+        
         self.horizontalLayoutWidget_5 = QtWidgets.QWidget(Form)
         self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(40, 180, 321, 80))
         self.horizontalLayoutWidget_5.setObjectName("horizontalLayoutWidget_5")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_5)
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.label_10 = QtWidgets.QLabel(self.horizontalLayoutWidget_5)
-        self.label_10.setObjectName("label_10")
-        self.horizontalLayout_6.addWidget(self.label_10)
-        self.label_11 = QtWidgets.QLabel(self.horizontalLayoutWidget_5)
-        self.label_11.setObjectName("label_11")
-        self.horizontalLayout_6.addWidget(self.label_11)
-        self.password = QtWidgets.QLineEdit(self.horizontalLayoutWidget_5)
-        self.password.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.password.setObjectName("password")
-        self.horizontalLayout_6.addWidget(self.password)
+        
+        
+        
         self.simpan = QtWidgets.QPushButton(Form)
         self.simpan.setGeometry(QtCore.QRect(160, 280, 75, 23))
         self.simpan.setObjectName("simpan")
@@ -105,8 +90,6 @@ class Tambah(object):
             nama = self.nama.text()
             jabatan = self.jabatan.text()
             alamat = self.alamat.text()
-            username = self.username.text()
-            password = self.password.text()
             mydb = mc.connect(
                 host="localhost",
                 user="root",
@@ -116,8 +99,8 @@ class Tambah(object):
             )
 
             mycursor = mydb.cursor()
-            query = "INSERT INTO pegawai (nama_pegawai,id_jabatan,alamat,username,password) VALUES (%s,%s,%s,%s,%s)"
-            value = (nama,jabatan,alamat,username,password)
+            query = "INSERT INTO pegawai (nama_pegawai,id_jabatan,alamat) VALUES (%s,%s,%s)"
+            value = (nama,jabatan,alamat)
             mycursor.execute(query,value)
             mydb.commit()
         except mc.Error as e:
@@ -132,10 +115,7 @@ class Tambah(object):
         self.label_5.setText(_translate("Form", ":"))
         self.label_6.setText(_translate("Form", "Alamat  "))
         self.label_7.setText(_translate("Form", ":"))
-        self.label_8.setText(_translate("Form", "username"))
-        self.label_9.setText(_translate("Form", ":"))
-        self.label_10.setText(_translate("Form", "password"))
-        self.label_11.setText(_translate("Form", ":"))
+        
         self.simpan.setText(_translate("Form", "Simpan"))
 
 

@@ -44,14 +44,24 @@ class Pegawai(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.tableWidget = QtWidgets.QTableWidget(self.horizontalLayoutWidget_4)
         self.tableWidget.setRowCount(5)
-        self.tableWidget.setColumnCount(4)
+        self.tableWidget.setColumnCount(3)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setHorizontalHeaderLabels(['Nama', 'Jabatan', 'Alamat', 'username'])
+        self.tableWidget.setHorizontalHeaderLabels(['Nama', 'Jabatan', 'Alamat'])
         self.horizontalLayout_7.addWidget(self.tableWidget)
         self.pushButton = QtWidgets.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(620, 122, 101, 31))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.pageTambah)
+        self.hapusButton = QtWidgets.QPushButton(Form)
+        self.hapusButton.setGeometry(QtCore.QRect(20, 122, 101, 31))
+        self.hapusButton.setObjectName("hapusButton")
+        self.hapusButton.clicked.connect(self.hapus)
+        self.hapusButton.clicked.connect(self.selectData)
+        self.refreshButton = QtWidgets.QPushButton(Form)
+        self.refreshButton.setGeometry(QtCore.QRect(320, 122, 101, 31))
+        self.refreshButton.setObjectName("refreshButton")
+        self.refreshButton.clicked.connect(self.selectData)
+
         QtCore.QTimer.singleShot(10000, self.selectData)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -66,7 +76,7 @@ class Pegawai(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT nama_pegawai,id_jabatan,alamat,username from pegawai")
+        mycursor.execute("SELECT nama_pegawai,id_jabatan,alamat from pegawai")
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
 
@@ -75,7 +85,8 @@ class Pegawai(object):
             for column_number,data in enumerate(row_data):
                 self.tableWidget.setItem(row_number,column_number,QtWidgets.QTableWidgetItem(str(data)))
         # close 
-        
+        for item in self.tableWidget.selectedItems():
+            print("selectedItems", item.text())
     def selectData(self):
         # retrieve data
         mydb = mc.connect(
@@ -87,7 +98,7 @@ class Pegawai(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT nama_pegawai,id_jabatan,alamat,username from pegawai")
+        mycursor.execute("SELECT nama_pegawai,id_jabatan,alamat from pegawai")
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
 
@@ -96,6 +107,28 @@ class Pegawai(object):
             for column_number,data in enumerate(row_data):
                 self.tableWidget.setItem(row_number,column_number,QtWidgets.QTableWidgetItem(str(data)))
         # close 
+    def hapus(self):
+        
+        try:
+            row = self.tableWidget.currentRow()
+            currentNama = (self.tableWidget.item(row, 0).text() )
+            currentAlamat = (self.tableWidget.item(row, 2).text() )
+            mydb = mc.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="kantor"
+            )
+
+            mycursor = mydb.cursor()
+            query = "DELETE FROM pegawai WHERE nama_pegawai=%s AND alamat=%s"
+            value = (currentNama,currentAlamat)
+            mycursor.execute(query,value)
+            mydb.commit()
+        except mc.Error as e:
+            print('gagal')
+            
+
     def pageTambah(self):
         self.Form2 = QtWidgets.QDialog()
         self.ui = Tambah()
@@ -107,7 +140,8 @@ class Pegawai(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.label.setText(_translate("Form", "PT. BEJO ABADI Tbk"))
         self.pushButton.setText(_translate("Form", "Tambah"))
-
+        self.hapusButton.setText(_translate("Form", "Hapus"))
+        self.refreshButton.setText(_translate("Form", "Refresh"))
 
 if __name__ == "__main__":
     import sys

@@ -85,7 +85,7 @@ class Login(object):
             )
 
             mycursor = mydb.cursor()
-            mycursor.execute("SELECT username,password from pegawai where username like '"+username + "'and password like '"+password+"'")
+            mycursor.execute("SELECT username,password from users where username like '"+username + "'and password like '"+password+"'")
             result = mycursor.fetchone()
 
             if result == None:
