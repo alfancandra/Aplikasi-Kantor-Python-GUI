@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import mysql.connector as mc
+from pegawai.tambahpegawai import *
 
 class Pegawai(object):
     def setupUi(self, Form):
@@ -43,13 +44,15 @@ class Pegawai(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.tableWidget = QtWidgets.QTableWidget(self.horizontalLayoutWidget_4)
         self.tableWidget.setRowCount(5)
-        self.tableWidget.setColumnCount(6)
+        self.tableWidget.setColumnCount(4)
         self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setHorizontalHeaderLabels(['Nama', 'Jabatan', 'Alamat', 'username'])
         self.horizontalLayout_7.addWidget(self.tableWidget)
         self.pushButton = QtWidgets.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(620, 122, 101, 31))
         self.pushButton.setObjectName("pushButton")
-
+        self.pushButton.clicked.connect(self.pageTambah)
+        QtCore.QTimer.singleShot(10000, self.selectData)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -73,6 +76,32 @@ class Pegawai(object):
                 self.tableWidget.setItem(row_number,column_number,QtWidgets.QTableWidgetItem(str(data)))
         # close 
         
+    def selectData(self):
+        # retrieve data
+        mydb = mc.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="kantor"
+
+        )
+
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT nama_pegawai,id_jabatan,alamat,username from pegawai")
+        result = mycursor.fetchall()
+        self.tableWidget.setRowCount(0)
+
+        for row_number,row_data in enumerate(result):
+            self.tableWidget.insertRow(row_number)
+            for column_number,data in enumerate(row_data):
+                self.tableWidget.setItem(row_number,column_number,QtWidgets.QTableWidgetItem(str(data)))
+        # close 
+    def pageTambah(self):
+        self.Form2 = QtWidgets.QDialog()
+        self.ui = Tambah()
+        self.ui.setupUi(self.Form2)
+        self.Form2.show()
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))

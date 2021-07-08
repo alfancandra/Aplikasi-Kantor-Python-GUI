@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from pegawai import *
+from pegawai.pegawai import *
 
 class Home(object):
     def setupUi(self, Form):
