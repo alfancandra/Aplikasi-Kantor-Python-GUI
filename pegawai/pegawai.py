@@ -11,6 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import mysql.connector as mc
 from pegawai.tambahpegawai import *
+from home import *
 
 class Pegawai(object):
     def setupUi(self, Form):
@@ -62,6 +63,11 @@ class Pegawai(object):
         self.refreshButton.setObjectName("refreshButton")
         self.refreshButton.clicked.connect(self.selectData)
 
+        self.buttonKembali = QtWidgets.QPushButton(Form)
+        self.buttonKembali.setGeometry(QtCore.QRect(20, 80, 101, 31))
+        self.buttonKembali.setObjectName("buttonKembali")
+        self.buttonKembali.clicked.connect(Form.close)
+
         QtCore.QTimer.singleShot(10000, self.selectData)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -87,6 +93,13 @@ class Pegawai(object):
         # close 
         for item in self.tableWidget.selectedItems():
             print("selectedItems", item.text())
+
+    def kehome(self):
+        self.FormHome = QtWidgets.QDialog()
+        self.ui = Home()
+        self.ui.setupUi(self.FormHome)
+        self.FormHome.show()
+
     def selectData(self):
         # retrieve data
         mydb = mc.connect(
@@ -98,7 +111,7 @@ class Pegawai(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT nama_pegawai,id_jabatan,alamat from pegawai")
+        mycursor.execute("SELECT pegawai.nama_pegawai,jabatan.jabatan,pegawai.alamat from pegawai inner join jabatan on pegawai.id_jabatan = jabatan.id")
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
 
@@ -142,6 +155,7 @@ class Pegawai(object):
         self.pushButton.setText(_translate("Form", "Tambah"))
         self.hapusButton.setText(_translate("Form", "Hapus"))
         self.refreshButton.setText(_translate("Form", "Refresh"))
+        self.buttonKembali.setText(_translate("Form", "Kembali"))
 
 if __name__ == "__main__":
     import sys

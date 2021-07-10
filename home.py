@@ -23,7 +23,6 @@ class Home(object):
         self.pushButton_2.setGeometry(QtCore.QRect(140, 80, 181, 31))
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_2.clicked.connect(self.pagePegawai)
-        self.pushButton_2.clicked.connect(Form.close)
 
         self.pushButton_3 = QtWidgets.QPushButton(self.groupBox)
         self.pushButton_3.setGeometry(QtCore.QRect(140, 140, 181, 31))
@@ -53,6 +52,11 @@ class Home(object):
         self.pushButton_3.setText(_translate("Form", "Hasil Gaji"))
         self.label.setText(_translate("Form", "PT. BEJO ABADI Tbk"))
 
+class Manager:
+    def __init__(self):
+        self.first = Home()
+
+        self.first.show()
 
 if __name__ == "__main__":
     import sys

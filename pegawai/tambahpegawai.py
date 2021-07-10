@@ -42,7 +42,7 @@ class Tambah(object):
         self.label_5 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
         self.label_5.setObjectName("label_5")
         self.horizontalLayout_3.addWidget(self.label_5)
-        self.jabatan = QtWidgets.QLineEdit(self.horizontalLayoutWidget_2)
+        self.jabatan = QtWidgets.QComboBox(self.horizontalLayoutWidget_2)
         self.jabatan.setObjectName("jabatan")
         self.horizontalLayout_3.addWidget(self.jabatan)
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(Form)
@@ -66,7 +66,7 @@ class Tambah(object):
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_4)
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        
+
         self.horizontalLayoutWidget_5 = QtWidgets.QWidget(Form)
         self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(40, 180, 321, 80))
         self.horizontalLayoutWidget_5.setObjectName("horizontalLayoutWidget_5")
@@ -85,10 +85,34 @@ class Tambah(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
+        try:
+            
+            mydb = mc.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="kantor"
+
+            )
+
+            mycursor = mydb.cursor()
+            query = "SELECT * FROM jabatan"
+            mycursor.execute(query)
+            result = mycursor.fetchall()
+
+        except mc.Error as e:
+            print('gagal')
+        self.names =[]
+        for i in result:
+            self.names.append(i[1])
+            self.jabatan.addItem(i[1])
+        print(self.names)
+    
+
     def simpanpegawai(self):
         try:
             nama = self.nama.text()
-            jabatan = self.jabatan.text()
+            jabatan2 = str(self.jabatan.currentText())
             alamat = self.alamat.text()
             mydb = mc.connect(
                 host="localhost",
@@ -99,8 +123,15 @@ class Tambah(object):
             )
 
             mycursor = mydb.cursor()
+            cekjabatan = "SELECT * FROM jabatan WHERE jabatan = %s"
+            values = (jabatan2,)
+            mycursor.execute(cekjabatan,values)
+            result = mycursor.fetchall()
+            for i in result:
+                id_jabatannya = i[0]
+            print(id_jabatannya)
             query = "INSERT INTO pegawai (nama_pegawai,id_jabatan,alamat) VALUES (%s,%s,%s)"
-            value = (nama,jabatan,alamat)
+            value = (nama,id_jabatannya,alamat)
             mycursor.execute(query,value)
             mydb.commit()
         except mc.Error as e:
