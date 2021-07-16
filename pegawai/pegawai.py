@@ -12,11 +12,193 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import mysql.connector as mc
 from pegawai.tambahpegawai import *
 from home import *
+from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QVBoxLayout, QLabel,QComboBox
+
+class TambahWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('second window')
+        self.setFixedWidth(500)
+        self.setStyleSheet("""
+            QLineEdit{
+                font-size: 30px
+            }
+            QPushButton{
+                font-size: 30px
+            }
+            QComboBox{
+                font-size: 30px
+            }
+            """)
+        mainLayout = QVBoxLayout()
+
+        self.nama = QLineEdit()
+        self.jabatan = QComboBox()
+        self.alamat = QLineEdit()
+        mainLayout.addWidget(self.nama)
+        mainLayout.addWidget(self.jabatan)
+        mainLayout.addWidget(self.alamat)
+
+        self.nama.setPlaceholderText('Nama lengkap')
+        self.alamat.setPlaceholderText('Alamat')
+
+        self.saveButton = QPushButton('Simpan')
+        self.saveButton.clicked.connect(self.simpanpegawai)
+        self.saveButton.clicked.connect(self.close)
+        mainLayout.addWidget(self.saveButton)
+
+        self.setLayout(mainLayout)
+        try:
+            
+            mydb = mc.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="kantor"
+
+            )
+
+            mycursor = mydb.cursor()
+            query = "SELECT * FROM jabatan"
+            mycursor.execute(query)
+            result = mycursor.fetchall()
+
+        except mc.Error as e:
+            print('gagal')
+        self.names =[]
+        for i in result:
+            self.names.append(i[1])
+            self.jabatan.addItem(i[1])
+        print(self.names)
+
+    def displayInfo(self):
+        self.show()
+
+    def simpanpegawai(self):
+        try:
+            nama = self.nama.text()
+            jabatan2 = str(self.jabatan.currentText())
+            alamat = self.alamat.text()
+            mydb = mc.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="kantor"
+
+            )
+
+            mycursor = mydb.cursor()
+            cekjabatan = "SELECT * FROM jabatan WHERE jabatan = %s"
+            values = (jabatan2,)
+            mycursor.execute(cekjabatan,values)
+            result = mycursor.fetchall()
+            for i in result:
+                id_jabatannya = i[0]
+            print(id_jabatannya)
+            query = "INSERT INTO pegawai (nama_pegawai,id_jabatan,alamat) VALUES (%s,%s,%s)"
+            value = (nama,id_jabatannya,alamat)
+            mycursor.execute(query,value)
+            mydb.commit()
+        except mc.Error as e:
+            print('gagal')
+
+class UpdateWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('second window')
+        self.setFixedWidth(500)
+        self.setStyleSheet("""
+            QLineEdit{
+                font-size: 30px
+            }
+            QPushButton{
+                font-size: 30px
+            }
+            QComboBox{
+                font-size: 30px
+            }
+            """)
+        mainLayout = QVBoxLayout()
+
+        self.inputid = QLineEdit()
+        self.input1 = QLineEdit()
+        self.input2 = QComboBox()
+        self.input3 = QLineEdit()
+        mainLayout.addWidget(self.inputid)
+        mainLayout.addWidget(self.input1)
+        mainLayout.addWidget(self.input2)
+        mainLayout.addWidget(self.input3)
+
+        self.inputid.setEnabled(False)
+
+        self.saveButton = QPushButton('Simpan')
+        self.saveButton.clicked.connect(self.simpanData)
+        self.saveButton.clicked.connect(self.close)
+        mainLayout.addWidget(self.saveButton)
+
+        self.setLayout(mainLayout)
+
+        try:
+            
+            mydb = mc.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="kantor"
+
+            )
+
+            mycursor = mydb.cursor()
+            query = "SELECT * FROM jabatan"
+            mycursor.execute(query)
+            result = mycursor.fetchall()
+
+        except mc.Error as e:
+            print('gagal')
+        self.names =[]
+        for i in result:
+            self.names.append(i[1])
+            self.input2.addItem(i[1])
+        print(self.names)
+
+    def displayInfo(self):
+        self.show()
+
+    def simpanData(self):
+        try:
+            id_pegawai = self.inputid.text()
+            nama = self.input1.text()
+            jabatan2 = str(self.input2.currentText())
+            alamat = self.input3.text()
+            mydb = mc.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="kantor"
+
+            )
+
+            mycursor = mydb.cursor()
+            cekjabatan = "SELECT * FROM jabatan WHERE jabatan = %s"
+            values = (jabatan2,)
+            mycursor.execute(cekjabatan,values)
+            result = mycursor.fetchall()
+            for i in result:
+                id_jabatannya = i[0]
+            print(id_jabatannya)
+            query = """UPDATE pegawai SET nama_pegawai = %s, id_jabatan = %s, alamat = %s WHERE id = %s"""
+            value = (nama,id_jabatannya,alamat,id_pegawai)
+            mycursor.execute(query,value)
+            mydb.commit()
+        except mc.Error as e:
+            print('gagal')
 
 class Pegawai(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(746, 561)
+        self.updateWindow = UpdateWindow()
+        self.tambahWindow = TambahWindow()
         self.horizontalLayoutWidget = QtWidgets.QWidget(Form)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 20, 701, 61))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
@@ -45,14 +227,14 @@ class Pegawai(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.tableWidget = QtWidgets.QTableWidget(self.horizontalLayoutWidget_4)
         self.tableWidget.setRowCount(5)
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(4)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setHorizontalHeaderLabels(['Nama', 'Jabatan', 'Alamat'])
+        self.tableWidget.setHorizontalHeaderLabels(['id','Nama', 'Jabatan', 'Alamat'])
         self.horizontalLayout_7.addWidget(self.tableWidget)
         self.pushButton = QtWidgets.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(620, 122, 101, 31))
         self.pushButton.setObjectName("pushButton")
-        self.pushButton.clicked.connect(self.pageTambah)
+        self.pushButton.clicked.connect(self.tambah)
         self.hapusButton = QtWidgets.QPushButton(Form)
         self.hapusButton.setGeometry(QtCore.QRect(20, 122, 101, 31))
         self.hapusButton.setObjectName("hapusButton")
@@ -63,6 +245,11 @@ class Pegawai(object):
         self.refreshButton.setObjectName("refreshButton")
         self.refreshButton.clicked.connect(self.selectData)
 
+        self.updatebutton = QtWidgets.QPushButton(Form)
+        self.updatebutton.setGeometry(QtCore.QRect(150, 122, 101, 31))
+        self.updatebutton.setObjectName("updatebutton")
+        self.updatebutton.clicked.connect(self.updatedata)
+
         self.buttonKembali = QtWidgets.QPushButton(Form)
         self.buttonKembali.setGeometry(QtCore.QRect(20, 80, 101, 31))
         self.buttonKembali.setObjectName("buttonKembali")
@@ -72,33 +259,39 @@ class Pegawai(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        # retrieve data
-        mydb = mc.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="kantor"
-
-        )
-
-        mycursor = mydb.cursor()
-        mycursor.execute("SELECT nama_pegawai,id_jabatan,alamat from pegawai")
-        result = mycursor.fetchall()
-        self.tableWidget.setRowCount(0)
-
-        for row_number,row_data in enumerate(result):
-            self.tableWidget.insertRow(row_number)
-            for column_number,data in enumerate(row_data):
-                self.tableWidget.setItem(row_number,column_number,QtWidgets.QTableWidgetItem(str(data)))
-        # close 
-        for item in self.tableWidget.selectedItems():
-            print("selectedItems", item.text())
+        
 
     def kehome(self):
         self.FormHome = QtWidgets.QDialog()
         self.ui = Home()
         self.ui.setupUi(self.FormHome)
         self.FormHome.show()
+
+    def updatedata(self):
+        try:
+            row = self.tableWidget.currentRow()
+            thing = self.tableWidget.item(row,0)
+            thing1 = self.tableWidget.item(row,1)
+            thing2 = self.tableWidget.item(row,3)
+            if thing is not None or thing1 is not None or thing2 is not None and thing.text() != '':
+                currentid = (self.tableWidget.item(row, 0).text() )
+                currentNama = (self.tableWidget.item(row, 1).text() )
+                currentAlamat = (self.tableWidget.item(row, 3).text() )
+                self.updateWindow.inputid.setText(currentid)
+                self.updateWindow.input1.setText(currentNama)
+                self.updateWindow.input3.setText(currentAlamat)
+                self.updateWindow.displayInfo()
+            
+        except Exception as e:
+            raise
+        else:
+            pass
+        finally:
+            pass
+        
+
+    def tambah(self):
+        self.tambahWindow.displayInfo()
 
     def selectData(self):
         # retrieve data
@@ -111,7 +304,7 @@ class Pegawai(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT pegawai.nama_pegawai,jabatan.jabatan,pegawai.alamat from pegawai inner join jabatan on pegawai.id_jabatan = jabatan.id")
+        mycursor.execute("SELECT pegawai.id,pegawai.nama_pegawai,jabatan.jabatan,pegawai.alamat from pegawai inner join jabatan on pegawai.id_jabatan = jabatan.id ORDER BY jabatan.id ASC")
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
 
@@ -124,20 +317,24 @@ class Pegawai(object):
         
         try:
             row = self.tableWidget.currentRow()
-            currentNama = (self.tableWidget.item(row, 0).text() )
-            currentAlamat = (self.tableWidget.item(row, 2).text() )
-            mydb = mc.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="kantor"
-            )
+            thing = self.tableWidget.item(row,0)
+            thing1 = self.tableWidget.item(row,1)
+            thing2 = self.tableWidget.item(row,3)
+            if thing is not None or thing1 is not None or thing2 is not None and thing.text() != '':
+                currentNama = (self.tableWidget.item(row, 1).text() )
+                currentAlamat = (self.tableWidget.item(row, 3).text() )
+                mydb = mc.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="kantor"
+                )
 
-            mycursor = mydb.cursor()
-            query = "DELETE FROM pegawai WHERE nama_pegawai=%s AND alamat=%s"
-            value = (currentNama,currentAlamat)
-            mycursor.execute(query,value)
-            mydb.commit()
+                mycursor = mydb.cursor()
+                query = "DELETE FROM pegawai WHERE nama_pegawai=%s AND alamat=%s"
+                value = (currentNama,currentAlamat)
+                mycursor.execute(query,value)
+                mydb.commit()
         except mc.Error as e:
             print('gagal')
             
@@ -155,6 +352,7 @@ class Pegawai(object):
         self.pushButton.setText(_translate("Form", "Tambah"))
         self.hapusButton.setText(_translate("Form", "Hapus"))
         self.refreshButton.setText(_translate("Form", "Refresh"))
+        self.updatebutton.setText(_translate("Form", "Update"))
         self.buttonKembali.setText(_translate("Form", "Kembali"))
 
 if __name__ == "__main__":
