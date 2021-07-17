@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pegawai.pegawai import *
+from penggajian.penggajian import *
 
 class Home(object):
     def setupUi(self, Form):
@@ -27,6 +28,8 @@ class Home(object):
         self.pushButton_3 = QtWidgets.QPushButton(self.groupBox)
         self.pushButton_3.setGeometry(QtCore.QRect(140, 140, 181, 31))
         self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.clicked.connect(self.pagePenggajian)
+
         self.label = QtWidgets.QLabel(Form)
         self.label.setGeometry(QtCore.QRect(260, 40, 211, 16))
         font = QtGui.QFont()
@@ -44,6 +47,12 @@ class Home(object):
         self.ui = Pegawai()
         self.ui.setupUi(self.Form2)
         self.Form2.show()
+
+    def pagePenggajian(self):
+        self.Form3 = QtWidgets.QDialog()
+        self.ui2 = Penggajian()
+        self.ui2.setupUi(self.Form3)
+        self.Form3.show()
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
