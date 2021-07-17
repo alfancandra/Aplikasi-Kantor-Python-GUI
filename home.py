@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from pegawai.pegawai import *
 from penggajian.penggajian import *
 from jabatan.jabatan import *
+from gaji.gaji import *
 
 class Home(object):
     def setupUi(self, Form):
@@ -22,19 +23,24 @@ class Home(object):
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.pushButton_2 = QtWidgets.QPushButton(self.groupBox)
-        self.pushButton_2.setGeometry(QtCore.QRect(140, 80, 181, 31))
+        self.pushButton_2.setGeometry(QtCore.QRect(140, 20, 181, 31))
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_2.clicked.connect(self.pagePegawai)
 
         self.pushButton_3 = QtWidgets.QPushButton(self.groupBox)
-        self.pushButton_3.setGeometry(QtCore.QRect(140, 140, 181, 31))
+        self.pushButton_3.setGeometry(QtCore.QRect(140, 80, 181, 31))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.clicked.connect(self.pagePenggajian)
 
         self.pushButton_4 = QtWidgets.QPushButton(self.groupBox)
-        self.pushButton_4.setGeometry(QtCore.QRect(140, 200, 181, 31))
+        self.pushButton_4.setGeometry(QtCore.QRect(140, 140, 181, 31))
         self.pushButton_4.setObjectName("pushButton_4")
         self.pushButton_4.clicked.connect(self.pageJabatan)
+
+        self.pushButton_5 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButton_5.setGeometry(QtCore.QRect(140, 200, 181, 31))
+        self.pushButton_5.setObjectName("pushButton_4")
+        self.pushButton_5.clicked.connect(self.pageGaji)
 
         self.label = QtWidgets.QLabel(Form)
         self.label.setGeometry(QtCore.QRect(260, 40, 211, 16))
@@ -66,12 +72,19 @@ class Home(object):
         self.ui2.setupUi(self.Form3)
         self.Form3.show()
 
+    def pageGaji(self):
+        self.Form4 = QtWidgets.QDialog()
+        self.ui3 = Gaji()
+        self.ui3.setupUi(self.Form4)
+        self.Form4.show()
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.pushButton_2.setText(_translate("Form", "Data Pegawai"))
-        self.pushButton_3.setText(_translate("Form", "Hasil Gaji"))
+        self.pushButton_3.setText(_translate("Form", "Penggajian Pegawai"))
         self.pushButton_4.setText(_translate("Form", "Data Jabatan"))
+        self.pushButton_5.setText(_translate("Form", "Data Gaji"))
         self.label.setText(_translate("Form", "PT. BEJO ABADI Tbk"))
 
 class Manager:

@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import mysql.connector as mc
 from pegawai.tambahpegawai import *
 from home import *
-from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QVBoxLayout, QLabel,QComboBox
+from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QVBoxLayout, QLabel,QComboBox,QSpinBox
 
 class TambahWindow(QWidget):
     def __init__(self):
@@ -21,52 +21,30 @@ class TambahWindow(QWidget):
             QComboBox{
                 font-size: 30px
             }
+            QSpinBox{
+                font-size: 30px
+            }
             """)
         mainLayout = QVBoxLayout()
 
-        self.nama = QLineEdit()
-        self.gaji = QComboBox()
-        mainLayout.addWidget(self.nama)
+        self.gaji = QSpinBox()
         mainLayout.addWidget(self.gaji)
-
-        self.nama.setPlaceholderText('Jabatan')
+        self.gaji.setMaximum(999999999)
 
         self.saveButton = QPushButton('Simpan')
-        self.saveButton.clicked.connect(self.simpanpegawai)
+        self.saveButton.clicked.connect(self.simpangaji)
         self.saveButton.clicked.connect(self.close)
         mainLayout.addWidget(self.saveButton)
 
         self.setLayout(mainLayout)
-        try:
-            
-            mydb = mc.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="kantor"
-
-            )
-
-            mycursor = mydb.cursor()
-            query = "SELECT * FROM gaji"
-            mycursor.execute(query)
-            result = mycursor.fetchall()
-
-        except mc.Error as e:
-            print('gagal')
-        self.names =[]
-        for i in result:
-            self.names.append(i[1])
-            self.gaji.addItem(str(i[1]))
-        print(self.names)
+        
 
     def displayInfo(self):
         self.show()
 
-    def simpanpegawai(self):
+    def simpangaji(self):
         try:
-            nama = self.nama.text()
-            gaji2 = str(self.gaji.currentText())
+            gaji = self.gaji.text()
             mydb = mc.connect(
                 host="localhost",
                 user="root",
@@ -76,15 +54,8 @@ class TambahWindow(QWidget):
             )
 
             mycursor = mydb.cursor()
-            cekgaji = "SELECT * FROM gaji WHERE gaji = %s"
-            values = (gaji2,)
-            mycursor.execute(cekgaji,values)
-            result = mycursor.fetchall()
-            for i in result:
-                id_gajinya = i[0]
-            print(id_gajinya)
-            query = "INSERT INTO jabatan (jabatan,id_gaji) VALUES (%s,%s)"
-            value = (nama,id_gajinya)
+            query = "INSERT INTO gaji (gaji) VALUES (%s)"
+            value = (gaji,)
             mycursor.execute(query,value)
             mydb.commit()
         except mc.Error as e:
@@ -105,15 +76,18 @@ class UpdateWindow(QWidget):
             QComboBox{
                 font-size: 30px
             }
+            QSpinBox{
+                font-size: 30px
+            }
             """)
         mainLayout = QVBoxLayout()
 
         self.inputid = QLineEdit()
-        self.input1 = QLineEdit()
-        self.input2 = QComboBox()
+        self.gaji = QSpinBox()
         mainLayout.addWidget(self.inputid)
-        mainLayout.addWidget(self.input1)
-        mainLayout.addWidget(self.input2)
+        mainLayout.addWidget(self.gaji)
+
+        self.gaji.setMaximum(999999999)
 
         self.inputid.setEnabled(False)
 
@@ -124,37 +98,14 @@ class UpdateWindow(QWidget):
 
         self.setLayout(mainLayout)
 
-        try:
-            
-            mydb = mc.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="kantor"
-
-            )
-
-            mycursor = mydb.cursor()
-            query = "SELECT * FROM gaji"
-            mycursor.execute(query)
-            result = mycursor.fetchall()
-
-        except mc.Error as e:
-            print('gagal')
-        self.names =[]
-        for i in result:
-            self.names.append(i[1])
-            self.input2.addItem(str(i[1]))
-        print(self.names)
 
     def displayInfo(self):
         self.show()
 
     def simpanData(self):
         try:
-            id_jabatan = self.inputid.text()
-            nama = self.input1.text()
-            gaji2 = str(self.input2.currentText())
+            id_gaji = self.inputid.text()
+            gaji = self.gaji.text()
             mydb = mc.connect(
                 host="localhost",
                 user="root",
@@ -164,21 +115,15 @@ class UpdateWindow(QWidget):
             )
 
             mycursor = mydb.cursor()
-            cekgaji = "SELECT * FROM gaji WHERE gaji = %s"
-            values = (gaji2,)
-            mycursor.execute(cekgaji,values)
-            result = mycursor.fetchall()
-            for i in result:
-                id_gajinya = i[0]
-            print(id_gajinya)
-            query = """UPDATE jabatan SET jabatan = %s, id_gaji = %s WHERE id = %s"""
-            value = (nama,id_gajinya,id_jabatan)
+            
+            query = """UPDATE gaji SET gaji = %s WHERE id = %s"""
+            value = (gaji,id_gaji)
             mycursor.execute(query,value)
             mydb.commit()
         except mc.Error as e:
             print('gagal')
 
-class Jabatan(object):
+class Gaji(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(746, 561)
@@ -212,9 +157,9 @@ class Jabatan(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.tableWidget = QtWidgets.QTableWidget(self.horizontalLayoutWidget_4)
         self.tableWidget.setRowCount(5)
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(2)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setHorizontalHeaderLabels(['id','Jabatan', 'Gaji'])
+        self.tableWidget.setHorizontalHeaderLabels(['id','Gaji'])
         self.horizontalLayout_7.addWidget(self.tableWidget)
         self.pushButton = QtWidgets.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(620, 122, 101, 31))
@@ -261,7 +206,7 @@ class Jabatan(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT jabatan.id,jabatan.jabatan,gaji.gaji FROM jabatan inner join gaji on jabatan.id_gaji = gaji.id")
+        mycursor.execute("SELECT gaji.id,gaji.gaji FROM gaji")
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
 
@@ -282,12 +227,11 @@ class Jabatan(object):
             row = self.tableWidget.currentRow()
             thing = self.tableWidget.item(row,0)
             thing1 = self.tableWidget.item(row,1)
-            thing2 = self.tableWidget.item(row,2)
             if thing is not None or thing1 is not None or thing2 is not None and thing.text() != '':
                 currentid = (self.tableWidget.item(row, 0).text() )
-                currentNama = (self.tableWidget.item(row, 1).text() )
+                currentGaji = (self.tableWidget.item(row, 1).text() )
                 self.updateWindow.inputid.setText(currentid)
-                self.updateWindow.input1.setText(currentNama)
+                self.updateWindow.gaji.setValue(int(currentGaji))
                 self.updateWindow.displayInfo()
             
         except Exception as e:
@@ -312,7 +256,7 @@ class Jabatan(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT jabatan.id,jabatan.jabatan,gaji.gaji FROM jabatan inner join gaji on jabatan.id_gaji = gaji.id")
+        mycursor.execute("SELECT gaji.id,gaji.gaji FROM gaji")
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
 
@@ -327,7 +271,6 @@ class Jabatan(object):
             row = self.tableWidget.currentRow()
             thing = self.tableWidget.item(row,0)
             thing1 = self.tableWidget.item(row,1)
-            thing2 = self.tableWidget.item(row,2)
             if thing is not None or thing1 is not None or thing2 is not None and thing.text() != '':
                 currentid = (self.tableWidget.item(row, 0).text() )
                 mydb = mc.connect(
@@ -338,7 +281,7 @@ class Jabatan(object):
                 )
 
                 mycursor = mydb.cursor()
-                query = "DELETE FROM jabatan WHERE id=%s"
+                query = "DELETE FROM gaji WHERE id=%s"
                 value = (currentid,)
                 mycursor.execute(query,value)
                 mydb.commit()
@@ -356,7 +299,7 @@ class Jabatan(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.label.setText(_translate("Form", "PT. BEJO ABADI Tbk"))
-        self.label2.setText(_translate("Form", "DATA JABATAN"))
+        self.label2.setText(_translate("Form", "DATA GAJI"))
         self.pushButton.setText(_translate("Form", "Tambah"))
         self.hapusButton.setText(_translate("Form", "Hapus"))
         self.refreshButton.setText(_translate("Form", "Refresh"))
@@ -367,7 +310,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Jabatan()
+    ui = Gaji()
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
