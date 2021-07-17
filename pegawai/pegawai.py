@@ -255,6 +255,13 @@ class Pegawai(object):
         self.buttonKembali.setObjectName("buttonKembali")
         self.buttonKembali.clicked.connect(Form.close)
 
+        self.label2 = QtWidgets.QLabel(Form)
+        self.label2.setText('DATA PEGAWAI')
+        self.label2.setGeometry(QtCore.QRect(280, 80, 101, 31))
+        self.label2.setFont(QtGui.QFont('Arial', 20))
+        self.label2.setObjectName("label2")
+        self.label2.adjustSize()
+
         QtCore.QTimer.singleShot(10000, self.selectData)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

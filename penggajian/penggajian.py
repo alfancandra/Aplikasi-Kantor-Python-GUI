@@ -25,10 +25,8 @@ class TambahWindow(QWidget):
         mainLayout = QVBoxLayout()
 
         self.nama = QComboBox()
-        self.gaji = QComboBox()
         self.bonus = QLineEdit()
         mainLayout.addWidget(self.nama)
-        mainLayout.addWidget(self.gaji)
         mainLayout.addWidget(self.bonus)
 
         self.bonus.setPlaceholderText('Bonus')
@@ -53,17 +51,14 @@ class TambahWindow(QWidget):
             query = "SELECT * FROM pegawai"
             mycursor.execute(query)
             result = mycursor.fetchall()
-            querygaji = "SELECT * FROM gaji"
-            mycursor.execute(querygaji)
-            result2 = mycursor.fetchall()
+            
         except mc.Error as e:
             print('gagal')
         self.names =[]
         for i in result:
             self.names.append(i[1])
             self.nama.addItem(i[1])
-        for i in result2:
-            self.gaji.addItem(str(i[1]))
+        
         print(self.names)
 
     def displayInfo(self):
@@ -72,7 +67,6 @@ class TambahWindow(QWidget):
     def simpanPenggajian(self):
         try:
             nama2 = str(self.nama.currentText())
-            gaji2 = str(self.gaji.currentText())
             bonus = self.bonus.text()
             mydb = mc.connect(
                 host="localhost",
@@ -89,18 +83,12 @@ class TambahWindow(QWidget):
             result = mycursor.fetchall()
             for i in result:
                 id_pegawainya = i[0]
-            cekgaji = "SELECT * FROM gaji WHERE gaji = %s"
-            values2 = (gaji2,)
-            mycursor.execute(cekgaji,values2)
-            result2 = mycursor.fetchall()
-            for i in result2:
-                id_gajinya = i[0]
-            print(id_pegawainya,id_gajinya)
+            print(id_pegawainya)
             now = datetime.now()
             datenow = now.strftime("%Y-%m-%d")
             print(datenow)
-            query = "INSERT INTO penggajian (id_gaji,id_pegawai,bonus,tanggal) VALUES (%s,%s,%s,%s)"
-            value = (id_gajinya,id_pegawainya,bonus,datenow)
+            query = "INSERT INTO penggajian (id_pegawai,bonus,tanggal) VALUES (%s,%s,%s)"
+            value = (id_pegawainya,bonus,datenow)
             mycursor.execute(query,value)
             mydb.commit()
         except mc.Error as e:
@@ -248,7 +236,12 @@ class Penggajian(object):
         self.refreshButton.setObjectName("refreshButton")
         self.refreshButton.clicked.connect(self.selectData)
 
-       
+        self.label2 = QtWidgets.QLabel(Form)
+        self.label2.setText('DATA GAJI')
+        self.label2.setGeometry(QtCore.QRect(300, 80, 101, 31))
+        self.label2.setFont(QtGui.QFont('Arial', 20))
+        self.label2.setObjectName("label2")
+        self.label2.adjustSize()
 
         self.buttonKembali = QtWidgets.QPushButton(Form)
         self.buttonKembali.setGeometry(QtCore.QRect(20, 80, 101, 31))
@@ -269,7 +262,7 @@ class Penggajian(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT penggajian.id,pegawai.nama_pegawai,jabatan.jabatan,gaji.gaji,penggajian.bonus,penggajian.tanggal FROM penggajian inner join pegawai on penggajian.id_pegawai = pegawai.id inner join gaji on penggajian.id_gaji = gaji.id inner join jabatan on pegawai.id_jabatan = jabatan.id")
+        mycursor.execute("SELECT penggajian.id,pegawai.nama_pegawai,jabatan.jabatan,gaji.gaji,penggajian.bonus,penggajian.tanggal FROM penggajian inner join pegawai on penggajian.id_pegawai = pegawai.id inner join jabatan on pegawai.id_jabatan = jabatan.id inner join gaji on jabatan.id_gaji = gaji.id")
         
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
@@ -323,7 +316,7 @@ class Penggajian(object):
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT penggajian.id,pegawai.nama_pegawai,jabatan.jabatan,gaji.gaji,penggajian.bonus,penggajian.tanggal FROM penggajian inner join pegawai on penggajian.id_pegawai = pegawai.id inner join gaji on penggajian.id_gaji = gaji.id inner join jabatan on pegawai.id_jabatan = jabatan.id")
+        mycursor.execute("SELECT penggajian.id,pegawai.nama_pegawai,jabatan.jabatan,gaji.gaji,penggajian.bonus,penggajian.tanggal FROM penggajian inner join pegawai on penggajian.id_pegawai = pegawai.id inner join jabatan on pegawai.id_jabatan = jabatan.id inner join gaji on jabatan.id_gaji = gaji.id")
         result = mycursor.fetchall()
         self.tableWidget.setRowCount(0)
 
