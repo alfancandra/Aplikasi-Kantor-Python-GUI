@@ -2,7 +2,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import mysql.connector as mc
-from pegawai.tambahpegawai import *
+
 from home import *
 from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QVBoxLayout, QLabel,QComboBox
 
@@ -182,6 +182,8 @@ class Jabatan(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(746, 561)
+        Form.setFixedSize(746,561)
+        Form.setStyleSheet("#Form{border-image:url(images/bg2.jpg)}")
         self.updateWindow = UpdateWindow()
         self.tambahWindow = TambahWindow()
         self.horizontalLayoutWidget = QtWidgets.QWidget(Form)

@@ -189,6 +189,8 @@ class Penggajian(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(746, 561)
+        Form.setFixedSize(746,561)
+        Form.setStyleSheet("#Form{border-image:url(images/bg2.jpg)}")
         self.tambahWindow = TambahWindow()
         self.horizontalLayoutWidget = QtWidgets.QWidget(Form)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 20, 701, 61))

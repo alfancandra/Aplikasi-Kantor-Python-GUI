@@ -18,6 +18,8 @@ class Home(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(746, 561)
+        Form.setFixedSize(746,561)
+        Form.setStyleSheet("#Form{border-image:url(images/bg.jpg)}")
         self.groupBox = QtWidgets.QGroupBox(Form)
         self.groupBox.setGeometry(QtCore.QRect(140, 140, 461, 271))
         self.groupBox.setTitle("")
@@ -43,6 +45,7 @@ class Home(object):
         self.pushButton_5.clicked.connect(self.pageGaji)
 
         self.label = QtWidgets.QLabel(Form)
+        self.label.setStyleSheet("QLabel{color:white}")
         self.label.setGeometry(QtCore.QRect(260, 40, 211, 16))
         font = QtGui.QFont()
         font.setPointSize(15)

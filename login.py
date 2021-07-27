@@ -32,14 +32,18 @@ class Login(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(746, 561)
+        Form.setFixedSize(746,561)
+        Form.setStyleSheet("#Form{border-image:url(images/bg.jpg)}")
         self.label = QtWidgets.QLabel(Form)
         self.label.setGeometry(QtCore.QRect(320, 30, 71, 16))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
         font.setWeight(75)
+
         self.label.setFont(font)
         self.label.setObjectName("label")
+        self.label.setStyleSheet("QLabel{color:white}")
         self.groupBox = QtWidgets.QGroupBox(Form)
         self.groupBox.setGeometry(QtCore.QRect(120, 140, 461, 271))
         self.groupBox.setTitle("")
@@ -55,19 +59,27 @@ class Login(object):
         self.label_2.setGeometry(QtCore.QRect(120, 80, 71, 16))
         font = QtGui.QFont()
         font.setPointSize(9)
-        self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.groupBox)
         self.label_3.setGeometry(QtCore.QRect(120, 130, 71, 16))
         font = QtGui.QFont()
         font.setPointSize(9)
-        self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
         self.loginButton = QtWidgets.QPushButton(self.groupBox)
         self.loginButton.setGeometry(QtCore.QRect(190, 190, 75, 23))
         self.loginButton.setObjectName("loginButton")
         self.loginButton.clicked.connect(self.login)
 
+        font2 = QtGui.QFont()
+        font2.setPointSize(12)
+        font2.setBold(True)
+        font2.setWeight(60)
+
+        
+        self.label_2.setFont(font2)
+        self.label_3.setFont(font2)
+        self.label_2.setStyleSheet("QLabel{color:white}")
+        self.label_3.setStyleSheet("QLabel{color:white}")
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -98,7 +110,7 @@ class Login(object):
                 self.Form.show()
                 Form.hide()
 
-
+                
         except mc.Error as e:
             self.labelResult.setText("Error")
 
