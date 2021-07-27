@@ -33,7 +33,7 @@ Data Pegawai
 
 Data Jabatan dan Gaji
 
-![enter image description here](https://i.im.ge/2021/07/27/ITfSa.gif)
+![enter image description here](https://i.im.ge/2021/07/27/IoQS8.gif)
 
 Penggajian
 
