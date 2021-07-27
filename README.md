@@ -11,9 +11,9 @@ Aplikasi ini memiliki fitur seperti
  - Hapus Data Pegawai, Jabatan dan Gaji
 
 Kelompok Bejo, Anggota :
-Alfan adi chandra 19104026
-Vincent Nathaniel 19104016
-Fadlan Raka Satura 19104072
+Alfan adi chandra - 19104026 ||
+Vincent Nathaniel - 19104016 ||
+Fadlan Raka Satura - 19104072 ||
 
 ## Use Case Aplikasi
 ![enter image description here](https://i.ibb.co/nz3zjXJ/Whats-App-Image-2021-07-25-at-11-53-45.jpg)
